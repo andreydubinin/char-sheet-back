@@ -32,8 +32,9 @@ Route::post('charsheets/set-characteristic/{charsheet}', 'Api\CharsheetControlle
 
 Route::group([
     'middleware' => ['api', 'jwt.auth'],
-    'prefix' => 'characteristics'
+    'prefix'     => 'characteristics',
 ], function ($router) {
     Route::get('', 'Api\CharacteristicController@index');
     Route::get('get-for-charsheet/{charsheet}', 'Api\CharacteristicController@getForCharsheet');
+    Route::post('store-for-charsheet/{charsheet}', 'Api\CharacteristicController@storeForCharsheet');
 });
