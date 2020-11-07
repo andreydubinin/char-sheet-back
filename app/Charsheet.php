@@ -69,6 +69,7 @@ class Charsheet extends Model
         'injury',
         'flaws',
         'traits',
+        'shield',
     ];
 
     protected $casts = [
