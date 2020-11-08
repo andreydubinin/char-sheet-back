@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Characteristic;
 use App\Charsheet;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SetCharacteristicRequest;
-use App\Http\Requests\StoreCharsheetRequest;
-use App\Http\Requests\UpdateCharsheetRequest;
+use App\Http\Requests\Charsheet\SetCharacteristicRequest;
+use App\Http\Requests\Charsheet\StoreRequest;
+use App\Http\Requests\Charsheet\UpdateRequest;
 use App\Http\Resources\CharsheetResource;
 use Auth;
 use Exception;
@@ -36,11 +36,11 @@ class CharsheetController extends Controller
     }
 
     /**
-     * @param StoreCharsheetRequest $request
+     * @param StoreRequest $request
      *
      * @return CharsheetResource
      */
-    public function store(StoreCharsheetRequest $request): CharsheetResource
+    public function store(StoreRequest $request): CharsheetResource
     {
         $charsheet          = new Charsheet();
         $charsheet->user_id = Auth::id();
@@ -59,7 +59,7 @@ class CharsheetController extends Controller
         return CharsheetResource::collection($charsheets)->response();
     }
 
-    public function update(UpdateCharsheetRequest $request, Charsheet $charsheet): JsonResponse
+    public function update(UpdateRequest $request, Charsheet $charsheet): JsonResponse
     {
         try {
             DB::beginTransaction();

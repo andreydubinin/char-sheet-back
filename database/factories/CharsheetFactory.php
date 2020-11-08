@@ -16,7 +16,11 @@ $factory->define(Charsheet::class, function (Faker $faker) {
         'resistance'  => $faker->numberBetween(1, 8),
         'charisma'    => $faker->numberBetween(1, 8),
         'experience'  => $faker->numberBetween(1, 8),
-        'injury'      => $faker->numberBetween(1, 5),
+        'injury'      => [
+            $faker->text(20),
+            $faker->text(15),
+            $faker->text(18),
+        ],
         'flaws'       => [
             $faker->text(20),
             $faker->text(15),

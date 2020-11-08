@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Characteristic;
 use App\Charsheet;
 use App\Helpers\CharacteristicHelper;
+use App\Http\Requests\Characteristic\StoreRequest;
 use App\Http\Resources\CharacteristicResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
  */
 class CharacteristicController
 {
+    /** @var CharacteristicHelper */
     private $characteristicHelper;
 
     /**
@@ -47,5 +49,26 @@ class CharacteristicController
     {
         return CharacteristicResource::collection($this->characteristicHelper->getCharacteristicForCharsheet($charsheet))
             ->response();
+    }
+
+    /**
+     * @param StoreRequest $request
+     * @param Charsheet    $charsheet
+     *
+     * @return CharacteristicResource
+     */
+    public function storeForCharsheet(StoreRequest $request, Charsheet $charsheet): CharacteristicResource
+    {
+        $characteristic             = new Characteristic();
+        $characteristic->is_default = false;
+        $characteristic->name       = $request->input('name');
+        $characteristic->parent_id  = $request->input('parent_id');
+        $characteristic->save();
+
+        $charsheet->characteristics()->syncWithoutDetaching([
+            $characteristic->id => ['value' => 0],
+        ]);
+
+        return new CharacteristicResource($characteristic);
     }
 }
