@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Equipment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Class StoreCharacteristicRequest
- * @package App\Http\Requests
- */
-class StoreCharacteristicRequest extends FormRequest
+class DestroyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -25,11 +21,10 @@ class StoreCharacteristicRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'parent_id' => 'exists:characteristics,id',
-            'name'      => 'required',
+            //
         ];
     }
 }

@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Equipment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Class StoreCharsheetRequest
- * @package App\Http\Requests
- */
-class StoreCharsheetRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +24,15 @@ class StoreCharsheetRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'charsheet_id' => 'required|exists:charsheets,id',
         ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getCharsheetId(): int
+    {
+        return $this->input('charsheet_id');
     }
 }

@@ -38,3 +38,7 @@ Route::group([
     Route::get('get-for-charsheet/{charsheet}', 'Api\CharacteristicController@getForCharsheet');
     Route::post('store-for-charsheet/{charsheet}', 'Api\CharacteristicController@storeForCharsheet');
 });
+
+Route::resource('powers', 'Api\PowerController')->middleware(['api', 'jwt.auth']);
+Route::resource('weapons', 'Api\WeaponController')->middleware(['api', 'jwt.auth']);
+Route::resource('equipments', 'Api\EquipmentController')->middleware(['api', 'jwt.auth']);

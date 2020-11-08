@@ -48,9 +48,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read int|null                                                       $characteristic_count
  * @property int                                                                 $user_id
  * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereUserId($value)
- * @property string|null $slogan
+ * @property string|null                                                         $slogan
  * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereSlogan($value)
- * @property-read int|null $characteristics_count
+ * @property-read int|null                                                       $characteristics_count
+ * @property int|null                                                            $shield
+ * @property int|null                                                            $wounds
+ * @property int|null                                                            $fatigue
+ * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereWounds($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereFatigue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereShield($value)
  */
 class Charsheet extends Model
 {
@@ -70,11 +76,14 @@ class Charsheet extends Model
         'flaws',
         'traits',
         'shield',
+        'wounds',
+        'fatigue',
     ];
 
     protected $casts = [
         'flaws'           => 'array',
         'traits'          => 'array',
+        'injury'          => 'array',
         'characteristics' => 'array',
     ];
 

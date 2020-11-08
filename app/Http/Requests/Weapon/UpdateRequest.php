@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Weapon;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Class SetCharacteristicRequest
- * @package App\Http\Requests
- */
-class SetCharacteristicRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +24,7 @@ class SetCharacteristicRequest extends FormRequest
     public function rules()
     {
         return [
-            'characteristic_id' => 'required|exists:characteristics,id',
-            'value'             => 'required',
+            //
         ];
     }
 }

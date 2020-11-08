@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Characteristic;
 use App\Charsheet;
 use App\Helpers\CharacteristicHelper;
-use App\Http\Requests\StoreCharacteristicRequest;
+use App\Http\Requests\Characteristic\StoreRequest;
 use App\Http\Resources\CharacteristicResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
  */
 class CharacteristicController
 {
+    /** @var CharacteristicHelper */
     private $characteristicHelper;
 
     /**
@@ -51,12 +52,12 @@ class CharacteristicController
     }
 
     /**
-     * @param StoreCharacteristicRequest $request
-     * @param Charsheet                  $charsheet
+     * @param StoreRequest $request
+     * @param Charsheet    $charsheet
      *
      * @return CharacteristicResource
      */
-    public function storeForCharsheet(StoreCharacteristicRequest $request, Charsheet $charsheet): CharacteristicResource
+    public function storeForCharsheet(StoreRequest $request, Charsheet $charsheet): CharacteristicResource
     {
         $characteristic             = new Characteristic();
         $characteristic->is_default = false;
