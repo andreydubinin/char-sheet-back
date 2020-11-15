@@ -33,8 +33,12 @@ class CharacteristicHelper
             foreach ($notDefaultCharacteristics as $characteristic) {
                 $characteristic->value = $characteristic->pivot->value;
 
-                //todo: придумать, как вставлять в дерево
-                $characteristics->push($characteristic);
+                /** @var Characteristic $parent */
+                $parent = $characteristics->find($characteristic->parent_id);
+
+                if ($parent) {
+                    $parent->children->push($characteristic);
+                }
             }
         }
 

@@ -37,7 +37,12 @@ class Characteristic extends Model
      */
     public static function getAllDefaultWithChildren(): Collection
     {
-        return static::whereNull('parent_id')->with('children')->where('is_default', true)->get();
+        return static::whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->where('is_default', true);
+            }])
+            ->where('is_default', true)
+            ->get();
     }
 
     /**
