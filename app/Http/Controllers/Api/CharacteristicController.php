@@ -8,7 +8,6 @@ use App\Helpers\CharacteristicHelper;
 use App\Http\Requests\Characteristic\StoreRequest;
 use App\Http\Resources\CharacteristicResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class CharacteristicController
@@ -40,12 +39,11 @@ class CharacteristicController
     }
 
     /**
-     * @param Request   $request
      * @param Charsheet $charsheet
      *
      * @return JsonResponse
      */
-    public function getForCharsheet(Request $request, Charsheet $charsheet): JsonResponse
+    public function getForCharsheet(Charsheet $charsheet): JsonResponse
     {
         return CharacteristicResource::collection($this->characteristicHelper->getCharacteristicForCharsheet($charsheet))
             ->response();
@@ -59,10 +57,11 @@ class CharacteristicController
      */
     public function storeForCharsheet(StoreRequest $request, Charsheet $charsheet): CharacteristicResource
     {
-        $characteristic             = new Characteristic();
-        $characteristic->is_default = false;
-        $characteristic->name       = $request->input('name');
-        $characteristic->parent_id  = $request->input('parent_id');
+        $characteristic                 = new Characteristic();
+        $characteristic->is_default     = false;
+        $characteristic->name           = $request->input('name');
+        $characteristic->parent_id      = $request->input('parent_id');
+        $characteristic->charsheet_type = $charsheet->type;
         $characteristic->save();
 
         $charsheet->characteristics()->syncWithoutDetaching([

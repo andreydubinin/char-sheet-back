@@ -12,7 +12,6 @@ use App\Http\Resources\CharsheetResource;
 use Auth;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CharsheetController extends Controller
@@ -23,12 +22,11 @@ class CharsheetController extends Controller
     }
 
     /**
-     * @param Request   $request
      * @param Charsheet $charsheet
      *
      * @return CharsheetResource
      */
-    public function show(Request $request, Charsheet $charsheet)
+    public function show(Charsheet $charsheet): CharsheetResource
     {
         $charsheet->load('characteristics');
 
@@ -44,7 +42,20 @@ class CharsheetController extends Controller
     {
         $charsheet          = new Charsheet();
         $charsheet->user_id = Auth::id();
+        $charsheet->type    = $request->input('type', Charsheet::TYPE_SAVAGE_WORLD);
         $charsheet->save();
+
+        $characteristics = Characteristic::whereCharsheetType($charsheet->type)
+            ->whereIsDefault(true)
+            ->get();
+
+        $characteristicValues = [];
+
+        foreach ($characteristics as $characteristic) {
+            $characteristicValues[$characteristic->id] = ['value' => 0];
+        }
+
+        $charsheet->characteristics()->syncWithoutDetaching($characteristicValues);
 
         return new CharsheetResource($charsheet);
     }
@@ -59,6 +70,13 @@ class CharsheetController extends Controller
         return CharsheetResource::collection($charsheets)->response();
     }
 
+    /**
+     * @param \App\Http\Requests\Charsheet\UpdateRequest $request
+     * @param \App\Charsheet                             $charsheet
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function update(UpdateRequest $request, Charsheet $charsheet): JsonResponse
     {
         try {
@@ -104,7 +122,7 @@ class CharsheetController extends Controller
         return response()->json(['message' => 'Чарник изменен!']);
     }
 
-    protected function resourceAbilityMap()
+    protected function resourceAbilityMap(): array
     {
         return array_merge(parent::resourceAbilityMap(), [
             'setCharacteristic' => 'update',

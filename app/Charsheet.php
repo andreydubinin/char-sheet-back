@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -24,42 +25,47 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property array                                                               $flaws
  * @property array                                                               $traits
  * @property array                                                               $characteristics
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet query()
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereAppearance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereCharacteristics($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereCharisma($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereConception($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereDefense($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereExperience($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereFlaws($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereInjury($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet wherePlayerName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereResistance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereStep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereTraits($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereUpdatedAt($value)
+ * @method static Builder|Charsheet newModelQuery()
+ * @method static Builder|Charsheet newQuery()
+ * @method static Builder|Charsheet query()
+ * @method static Builder|Charsheet whereAppearance($value)
+ * @method static Builder|Charsheet whereCharacteristics($value)
+ * @method static Builder|Charsheet whereCharisma($value)
+ * @method static Builder|Charsheet whereConception($value)
+ * @method static Builder|Charsheet whereCreatedAt($value)
+ * @method static Builder|Charsheet whereDefense($value)
+ * @method static Builder|Charsheet whereExperience($value)
+ * @method static Builder|Charsheet whereFlaws($value)
+ * @method static Builder|Charsheet whereId($value)
+ * @method static Builder|Charsheet whereInjury($value)
+ * @method static Builder|Charsheet whereName($value)
+ * @method static Builder|Charsheet wherePlayerName($value)
+ * @method static Builder|Charsheet whereResistance($value)
+ * @method static Builder|Charsheet whereStep($value)
+ * @method static Builder|Charsheet whereTraits($value)
+ * @method static Builder|Charsheet whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Characteristic[] $characteristic
  * @property-read int|null                                                       $characteristic_count
  * @property int                                                                 $user_id
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereUserId($value)
+ * @method static Builder|Charsheet whereUserId($value)
  * @property string|null                                                         $slogan
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereSlogan($value)
+ * @method static Builder|Charsheet whereSlogan($value)
  * @property-read int|null                                                       $characteristics_count
  * @property int|null                                                            $shield
  * @property int|null                                                            $wounds
  * @property int|null                                                            $fatigue
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereWounds($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereFatigue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Charsheet whereShield($value)
+ * @method static Builder|Charsheet whereWounds($value)
+ * @method static Builder|Charsheet whereFatigue($value)
+ * @method static Builder|Charsheet whereShield($value)
+ * @property int|null                                                            $type
+ * @method static Builder|Charsheet whereType($value)
  */
 class Charsheet extends Model
 {
+    public const TYPE_SAVAGE_WORLD = 1;
+    public const TYPE_CUSTOM       = 2;
+
     public $fillable = [
         'user_id',
         'name',
@@ -99,6 +105,8 @@ class Charsheet extends Model
                 'charsheet_id',
                 'characteristic_id'
             )
-            ->withPivot(['value']);
+            ->withPivot(['value'])
+            ->orderBy('sort', 'ASC')
+            ->orderBy('id', 'ASC');
     }
 }

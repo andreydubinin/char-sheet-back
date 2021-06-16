@@ -27,23 +27,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection|Characteristic[] $children
  * @property-read int|null                    $children_count
  * @property-read int                         $value
+ * @property int|null                         $charsheet_type
+ * @method static Builder|Characteristic whereCharsheetType($value)
  */
 class Characteristic extends Model
 {
     public $timestamps = false;
-
-    /**
-     * @return Collection
-     */
-    public static function getAllDefaultWithChildren(): Collection
-    {
-        return static::whereNull('parent_id')
-            ->with(['children' => function ($query) {
-                $query->where('is_default', true);
-            }])
-            ->where('is_default', true)
-            ->get();
-    }
 
     /**
      * @param $value

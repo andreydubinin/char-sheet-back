@@ -19,50 +19,39 @@ class CharacteristicHelper
      */
     public function getCharacteristicForCharsheet(Charsheet $charsheet): Collection
     {
-        $characteristics = Characteristic::getAllDefaultWithChildren();
+        $currentValues = $charsheet
+            ->characteristics()
+            ->get();
 
-        $currentValues = $charsheet->characteristics()->get();
-
-        $this->fillValues($characteristics, $currentValues);
-
-        $notDefaultCharacteristics = $currentValues->filter(function (Characteristic $item) {
-            return !$item->is_default;
+        $characteristics = $currentValues->filter(function (Characteristic $item) {
+            return !$item->parent_id;
         });
 
-        if ($notDefaultCharacteristics->isNotEmpty()) {
-            foreach ($notDefaultCharacteristics as $characteristic) {
-                $characteristic->value = $characteristic->pivot->value;
+        foreach ($characteristics as $characteristic) {
+            $characteristic->value = $characteristic->pivot->value;
+        }
 
+        $notParentCurrentValues = $currentValues->filter(function (Characteristic $item) {
+            return $item->parent_id;
+        });
+
+        if ($notParentCurrentValues->isNotEmpty()) {
+            foreach ($notParentCurrentValues as $characteristic) {
                 /** @var Characteristic $parent */
                 $parent = $characteristics->find($characteristic->parent_id);
 
                 if ($parent) {
-                    $parent->children->push($characteristic);
+                    if ($currentChild = $parent->children->find($characteristic->id)) {
+                        $currentChild->value = $characteristic->pivot->value;
+                    } else {
+                        $characteristic->value = $characteristic->pivot->value;
+
+                        $parent->children->push($characteristic);
+                    }
                 }
             }
         }
 
         return $characteristics;
-    }
-
-    /**
-     * @param Collection|Characteristic[] $characteristics
-     * @param Collection                  $currentValues
-     */
-    private function fillValues(Collection $characteristics, Collection $currentValues)
-    {
-        if ($characteristics->isNotEmpty()) {
-            foreach ($characteristics as $characteristic) {
-                $value = 1;
-
-                if ($currentValue = $currentValues->find($characteristic)) {
-                    $value = $currentValue->pivot->value;
-                }
-
-                $characteristic->setValueAttribute($value);
-
-                $this->fillValues($characteristic->children, $currentValues);
-            }
-        }
     }
 }
