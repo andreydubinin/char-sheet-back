@@ -39,14 +39,17 @@ class AppFixDataCommand extends Command
      */
     public function handle(): int
     {
-        $charsheets      = Charsheet::whereType(null)->with('characteristics')->get();
+        $charsheets      = Charsheet::with('characteristics')->get();
         $characteristics = Characteristic::whereCharsheetType(Charsheet::TYPE_SAVAGE_WORLD)
             ->whereIsDefault(true)
             ->get();
 
         foreach ($charsheets as $charsheet) {
-            $charsheet->type = Charsheet::TYPE_SAVAGE_WORLD;
-            $charsheet->save();
+            if (!$charsheet->type) {
+                $charsheet->type = Charsheet::TYPE_SAVAGE_WORLD;
+                $charsheet->save();
+            }
+
             $characteristicValues = [];
 
             foreach ($characteristics as $characteristic) {
