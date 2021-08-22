@@ -21,7 +21,8 @@ class CharacteristicHelper
     {
         $currentValues = $charsheet
             ->characteristics()
-            ->get();
+            ->get()
+            ->keyBy('slug');
 
         $characteristics = $currentValues->filter(function (Characteristic $item) {
             return !$item->parent_id;

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Characteristic;
-use App\Charsheet;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Console\Command;
 
 class AppFixDataCommand extends Command
@@ -39,34 +39,11 @@ class AppFixDataCommand extends Command
      */
     public function handle(): int
     {
-        $charsheets      = Charsheet::with('characteristics')->get();
-        $characteristics = Characteristic::whereCharsheetType(Charsheet::TYPE_SAVAGE_WORLD)
-            ->whereIsDefault(true)
+        $characteristics = Characteristic::whereSlug(null)
             ->get();
 
-        foreach ($charsheets as $charsheet) {
-            if (!$charsheet->type) {
-                $charsheet->type = Charsheet::TYPE_SAVAGE_WORLD;
-                $charsheet->save();
-            }
-
-            $characteristicValues = [];
-
-            foreach ($characteristics as $characteristic) {
-                if (!$charsheet->characteristics()->find($characteristic->id)) {
-                    $characteristicValues[$characteristic->id] = ['value' => 0];
-                }
-            }
-
-            if ($characteristicValues) {
-                $charsheet->characteristics()->syncWithoutDetaching($characteristicValues);
-            }
-        }
-
-        $characteristics = Characteristic::whereCharsheetType(null)->whereIsDefault(true)->get();
-
         foreach ($characteristics as $characteristic) {
-            $characteristic->charsheet_type = Charsheet::TYPE_SAVAGE_WORLD;
+            $characteristic->slug = SlugService::createSlug(Characteristic::class, 'slug', $characteristic->name);
             $characteristic->save();
         }
 

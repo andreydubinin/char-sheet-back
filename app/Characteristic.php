@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -29,9 +30,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int                         $value
  * @property int|null                         $charsheet_type
  * @method static Builder|Characteristic whereCharsheetType($value)
+ * @property string|null $slug
+ * @method static Builder|Characteristic whereSlug($value)
  */
 class Characteristic extends Model
 {
+    use Sluggable;
+
     public $timestamps = false;
 
     /**
@@ -58,5 +63,17 @@ class Characteristic extends Model
     public function children(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id')->with('children');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 }

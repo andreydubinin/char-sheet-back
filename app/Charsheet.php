@@ -65,6 +65,7 @@ class Charsheet extends Model
 {
     public const TYPE_SAVAGE_WORLD = 1;
     public const TYPE_CUSTOM       = 2;
+    public const TYPE_CYBERPUNK    = 3;
 
     public $fillable = [
         'user_id',
